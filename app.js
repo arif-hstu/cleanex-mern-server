@@ -47,14 +47,34 @@ MongoClient.connect(url, function(err, client) {
 	* handle GET requests
 	**********/
 	// root api 
-	app.get('/',(req, res) => {
+	app.get('/', (req, res) => {
 		res.send('Cleanex server is working');
 	})
-	app.get('/allServices', (req, res) => {
+
+	// services api
+	app.get('/services', (req, res) => {
 		servicesCollection.find({})
 			.toArray((err, documents) => {
 				res.send(documents);
-				console.log('service list sent to client');
+				console.log('Service list sent to client');
+			})
+	});
+
+	// orders api
+	app.get('/orders', (req, res) => {
+		orderCollection.find({})
+			.toArray((err, documents) => {
+				res.send(documents);
+				console.log('Order list sent to client');
+			})
+	});
+
+	// reviews api
+	app.get('/reviews', (req, res) => {
+		reviewCollection.find({})
+			.toArray((err, documents) => {
+				res.send(documents);
+				console.log('Reviews list sent to client');
 			})
 	});
 
