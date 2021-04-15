@@ -46,6 +46,10 @@ MongoClient.connect(url, function(err, client) {
 	/*********
 	* handle GET requests
 	**********/
+	// root api 
+	app.get('/',(req, res) => {
+		res.send('Cleanex server is working');
+	})
 	app.get('/allServices', (req, res) => {
 		servicesCollection.find({})
 			.toArray((err, documents) => {
