@@ -81,8 +81,14 @@ MongoClient.connect(url, function(err, client) {
 	/**********
 	* handle POST requests
 	***********/
-
-
+	// add service api
+	app.post('/addService', (req, res) => {
+		servicesCollection.insertOne(req.body)
+		.then(result => {
+			res.send(result);
+			console.log(result);
+		})
+	})
 });
 
 
