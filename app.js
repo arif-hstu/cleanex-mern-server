@@ -22,7 +22,6 @@ app.use(bodyParser.json());
 /************
 * HANDLE MONGODB REQUESTS
 *************/
-
 // require mongoClient
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
@@ -42,7 +41,6 @@ MongoClient.connect(url, function(err, client) {
 	const orderCollection = client.db(process.env.DB_NAME).collection('orders');
 	// ADMIN COLLECTION
 	const adminCollection = client.db(process.env.DB_NAME).collection('admins');
-
 
 
 
@@ -77,9 +75,18 @@ MongoClient.connect(url, function(err, client) {
 		reviewCollection.find({})
 			.toArray((err, documents) => {
 				res.send(documents);
-				console.log('Reviews list sent to client');
+				console.log('Review list sent to client');
 			})
 	});
+
+	// admins api
+	app.get('/admins', (req, res) => {
+		adminCollection.find({})
+			.toArray((err, documents) => {
+				res.send(documents);
+				console.log('Admin list sent to client');
+			})
+	})
 
 	/**********
 	* handle POST requests
@@ -100,6 +107,16 @@ MongoClient.connect(url, function(err, client) {
 				res.send(result);
 				console.log(result);
 			})
+	})
+
+	// make admin api
+	app.post('/book', (req, res) => {
+		console.log(req.body);
+	})
+
+	// add review api
+	app.post('/addReview', (req, res) => {
+		console.log(req.body);
 	})
 
 	// update order status
