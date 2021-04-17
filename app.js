@@ -40,6 +40,9 @@ MongoClient.connect(url, function(err, client) {
 	const reviewCollection = client.db(process.env.DB_NAME).collection('reviews');
 	// ORDER COLLECTION
 	const orderCollection = client.db(process.env.DB_NAME).collection('orders');
+	// ADMIN COLLECTION
+	const adminCollection = client.db(process.env.DB_NAME).collection('admins');
+
 
 
 
@@ -84,10 +87,33 @@ MongoClient.connect(url, function(err, client) {
 	// add service api
 	app.post('/addService', (req, res) => {
 		servicesCollection.insertOne(req.body)
-		.then(result => {
-			res.send(result);
-			console.log(result);
-		})
+			.then(result => {
+				res.send(result);
+				console.log(result);
+			})
+	})
+
+	// make admin api
+	app.post('/makeAdmin', (req, res) => {
+		adminCollection.insertOne(req.body)
+			.then(result => {
+				res.send(result);
+				console.log(result);
+			})
+	})
+
+	// update order status
+	app.post('/updateOrder', (req, res) => {
+		const { orderID, updatedStatus } = req.body;
+
+		orderCollection.update(
+			{ "orderID": orderID },
+			{ $set: { "status": updatedStatus } }
+		)
+			.then(result => {
+				res.send(result);
+				console.log(result);
+			})
 	})
 });
 
