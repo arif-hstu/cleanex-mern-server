@@ -168,6 +168,18 @@ MongoClient.connect(url, function(err, client) {
 				console.log(result);
 			})
 	})
+
+	// handle service deletion
+	app.post('/deleteService', (req, res) => {
+		servicesCollection.deleteOne({ "_id": ObjectID(req.body[0]) })
+			.then(result => {
+				res.send(result);
+				console.log('Service deleted successfully')
+			})
+			.catch(error => {
+				console.log(error)
+		})
+	})
 });
 
 
