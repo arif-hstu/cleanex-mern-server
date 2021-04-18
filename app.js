@@ -54,11 +54,20 @@ MongoClient.connect(url, function(err, client) {
 
 	// services api
 	app.get('/services', (req, res) => {
-		servicesCollection.find({})
-			.toArray((err, documents) => {
-				res.send(documents);
-				console.log('Service list sent to client');
-			})
+		const { count } = req.query;
+		if (count) {
+			servicesCollection.find().sort({ _id: -1 }).limit(parseInt(count))
+				.toArray((err, documents) => {
+					res.send(documents);
+					console.log('Latest '+ count +' services sent to client');
+				})
+		} else {
+			servicesCollection.find({})
+				.toArray((err, documents) => {
+					res.send(documents);
+					console.log('All services sent to client');
+				})
+		}
 	});
 
 	// orders api
@@ -72,11 +81,20 @@ MongoClient.connect(url, function(err, client) {
 
 	// reviews api
 	app.get('/reviews', (req, res) => {
-		reviewCollection.find({})
-			.toArray((err, documents) => {
-				res.send(documents);
-				console.log('Review list sent to client');
-			})
+		const { count } = req.query;
+		if (count) {
+			reviewCollection.find().sort({ _id: -1 }).limit(parseInt(count))
+				.toArray((err, documents) => {
+					res.send(documents);
+					console.log('Latest '+ count +' reviews sent to client');
+				})
+		} else {
+			reviewCollection.find({})
+				.toArray((err, documents) => {
+					res.send(documents);
+					console.log('All reviews sent to client');
+				})
+		}
 	});
 
 	// admins api
@@ -100,23 +118,41 @@ MongoClient.connect(url, function(err, client) {
 			})
 	})
 
+	// book service api
+	app.post('/seletedService', (req, res) => {
+		const id = req.body[0];
+		servicesCollection.find({"_id" : ObjectID(id)})
+			.toArray((err, documents) => {
+				res.send(documents)
+				console.log('Selected Service sent to client');
+			})
+	})
+
 	// make admin api
 	app.post('/makeAdmin', (req, res) => {
 		adminCollection.insertOne(req.body)
 			.then(result => {
 				res.send(result);
-				console.log(result);
+				console.log('Admin created successfully');
 			})
 	})
 
 	// make admin api
 	app.post('/book', (req, res) => {
-		console.log(req.body);
+		orderCollection.insertOne(req.body)
+			.then(result => {
+				res.send(result);
+				console.log('New order booked successfully');
+			})
 	})
 
 	// add review api
 	app.post('/addReview', (req, res) => {
-		console.log(req.body);
+		reviewCollection.insertOne(req.body)
+			.then(result => {
+				res.send(result);
+				console.log('Review added successfully');
+			})
 	})
 
 	// update order status
